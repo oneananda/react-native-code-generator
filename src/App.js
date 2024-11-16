@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DraggableElement from './components/DraggableElement';
 import DropZone from './components/DropZone';
+import { downloadFile } from './utils/downloadFile';
 
 const App = () => {
   const [droppedItems, setDroppedItems] = useState([]);
@@ -45,6 +46,11 @@ const App = () => {
     `;
   };
 
+  const exportCode = () => {
+    const code = generateCode();
+    downloadFile('App.js', code);
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>React Native Code Generator</h1>
@@ -65,6 +71,20 @@ const App = () => {
         >
           {generateCode()}
         </pre>
+        <button
+          onClick={exportCode}
+          style={{
+            marginTop: '10px',
+            padding: '10px 20px',
+            backgroundColor: '#007BFF',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          Export Code
+        </button>
       </div>
     </div>
   );
