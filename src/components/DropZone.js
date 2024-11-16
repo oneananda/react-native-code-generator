@@ -4,7 +4,10 @@ import { useDrop } from 'react-dnd';
 const DropZone = ({ onDrop, droppedItems }) => {
   const [{ isOver }, dropRef] = useDrop(() => ({
     accept: 'ELEMENT',
-    drop: (item) => onDrop(item),
+    drop: (item, monitor) => {
+      const offset = monitor.getClientOffset();
+      onDrop(item, offset);
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
