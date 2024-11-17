@@ -7,9 +7,15 @@ const App = () => {
   const [droppedItems, setDroppedItems] = useState([]);
 
   const handleDrop = (item, offset) => {
+    if (!item || !item.name) {
+      console.error('Dropped item is missing a name:', item);
+      return;
+    }
+  
     const canvasRect = document
       .querySelector('div[style*="border: 2px dashed"]')
       .getBoundingClientRect();
+  
     setDroppedItems((prev) => [
       ...prev,
       {
@@ -19,6 +25,15 @@ const App = () => {
         style: {},
       },
     ]);
+  };
+  
+
+  const updateItemPosition = (index, key, value) => {
+    setDroppedItems((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, [key]: value } : item
+      )
+    );
   };
 
   const updateItemStyle = (index, key, value) => {
@@ -32,14 +47,16 @@ const App = () => {
   const generateCode = () => {
     return `
       import React from 'react';
-      import { View, ${droppedItems.map(
-        (item) => item.name.replace(' ', '')
-      )} } from 'react-native';
-
+      import { View, ${droppedItems
+        .map((item) => item.name ? item.name.replace(' ', '') : '')
+        .filter(Boolean) // Remove empty strings
+        .join(', ')} } from 'react-native';
+  
       const App = () => (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           ${droppedItems
             .map((item) => {
+              if (!item.name) return ''; // Skip items without a name
               if (item.name === 'Button') {
                 return `<Button title="Click Me" onPress={() => alert('Clicked!')} style={${JSON.stringify(
                   item.style
@@ -53,13 +70,15 @@ const App = () => {
                 item.style
               )}} />`;
             })
+            .filter(Boolean) // Remove empty strings
             .join('\n')}
         </View>
       );
-
+  
       export default App;
     `;
   };
+  
 
   const exportCode = () => {
     const code = generateCode();
@@ -76,6 +95,7 @@ const App = () => {
       <DropZone
         onDrop={handleDrop}
         droppedItems={droppedItems}
+        updateItemPosition={updateItemPosition}
         updateItemStyle={updateItemStyle}
       />
       <div style={{ marginTop: '20px' }}>

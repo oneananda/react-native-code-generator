@@ -1,7 +1,79 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 
-const DropZone = ({ onDrop, droppedItems, updateItemStyle }) => {
+const DroppedItem = ({ item, index, updateItemPosition, updateItemStyle }) => {
+  const [, dragRef] = useDrag(() => ({
+    type: 'ELEMENT',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  const handlePositionChange = (key, value) => {
+    updateItemPosition(index, key, value);
+  };
+
+  const handleStyleChange = (key, value) => {
+    updateItemStyle(index, key, value);
+  };
+
+  return (
+    <div
+      ref={dragRef}
+      style={{
+        position: 'absolute',
+        top: item.top,
+        left: item.left,
+        padding: '8px',
+        border: '1px solid #ddd',
+        backgroundColor: '#fff',
+        cursor: 'move',
+        ...item.style,
+      }}
+    >
+      {item.name}
+      <div style={{ marginTop: '5px' }}>
+        <label>
+          X:
+          <input
+            type="number"
+            value={item.left || 0}
+            onChange={(e) =>
+              handlePositionChange('left', parseInt(e.target.value, 10))
+            }
+            style={{ width: '60px', marginLeft: '5px' }}
+          />
+        </label>
+        <label style={{ marginLeft: '10px' }}>
+          Y:
+          <input
+            type="number"
+            value={item.top || 0}
+            onChange={(e) =>
+              handlePositionChange('top', parseInt(e.target.value, 10))
+            }
+            style={{ width: '60px', marginLeft: '5px' }}
+          />
+        </label>
+        <label style={{ marginLeft: '10px' }}>
+          Color:
+          <input
+            type="color"
+            value={item.style.color || '#000000'}
+            onChange={(e) =>
+              handleStyleChange('color', e.target.value)
+            }
+            style={{ marginLeft: '5px' }}
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
+
+const DropZone = ({ onDrop, droppedItems, updateItemPosition, updateItemStyle }) => {
   const [{ isOver }, dropRef] = useDrop(() => ({
     accept: 'ELEMENT',
     drop: (item, monitor) => {
@@ -12,10 +84,6 @@ const DropZone = ({ onDrop, droppedItems, updateItemStyle }) => {
       isOver: monitor.isOver(),
     }),
   }));
-
-  const handleStyleChange = (index, key, value) => {
-    updateItemStyle(index, key, value);
-  };
 
   return (
     <div
@@ -31,45 +99,13 @@ const DropZone = ({ onDrop, droppedItems, updateItemStyle }) => {
       }}
     >
       {droppedItems.map((item, index) => (
-        <div
+        <DroppedItem
           key={index}
-          style={{
-            position: 'absolute',
-            top: item.top,
-            left: item.left,
-            padding: '8px',
-            border: '1px solid #ddd',
-            backgroundColor: '#fff',
-            cursor: 'pointer',
-            ...item.style,
-          }}
-        >
-          {item.name}
-          <div style={{ marginTop: '5px' }}>
-            <label>
-              Font Size:
-              <input
-                type="number"
-                value={item.style.fontSize || 14}
-                onChange={(e) =>
-                  handleStyleChange(index, 'fontSize', `${e.target.value}px`)
-                }
-                style={{ width: '60px', marginLeft: '5px' }}
-              />
-            </label>
-            <label style={{ marginLeft: '10px' }}>
-              Color:
-              <input
-                type="color"
-                value={item.style.color || '#000000'}
-                onChange={(e) =>
-                  handleStyleChange(index, 'color', e.target.value)
-                }
-                style={{ marginLeft: '5px' }}
-              />
-            </label>
-          </div>
-        </div>
+          item={item}
+          index={index}
+          updateItemPosition={updateItemPosition}
+          updateItemStyle={updateItemStyle}
+        />
       ))}
       {!droppedItems.length && (
         <p style={{ color: '#aaa', textAlign: 'center' }}>
