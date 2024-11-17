@@ -16,8 +16,17 @@ const App = () => {
         ...item,
         top: offset.y - canvasRect.top,
         left: offset.x - canvasRect.left,
+        style: {},
       },
     ]);
+  };
+
+  const updateItemStyle = (index, key, value) => {
+    setDroppedItems((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, style: { ...item.style, [key]: value } } : item
+      )
+    );
   };
 
   const generateCode = () => {
@@ -32,11 +41,17 @@ const App = () => {
           ${droppedItems
             .map((item) => {
               if (item.name === 'Button') {
-                return `<Button title="Click Me" onPress={() => alert('Clicked!')} />`;
+                return `<Button title="Click Me" onPress={() => alert('Clicked!')} style={${JSON.stringify(
+                  item.style
+                )}} />`;
               } else if (item.name === 'Text Box') {
-                return `<View><Text>Sample Text</Text></View>`;
+                return `<View><Text style={${JSON.stringify(
+                  item.style
+                )}}>Sample Text</Text></View>`;
               }
-              return `<${item.name.replace(' ', '')} />`;
+              return `<${item.name.replace(' ', '')} style={${JSON.stringify(
+                item.style
+              )}} />`;
             })
             .join('\n')}
         </View>
@@ -58,7 +73,11 @@ const App = () => {
         <DraggableElement name="Button" />
         <DraggableElement name="Text Box" />
       </div>
-      <DropZone onDrop={handleDrop} droppedItems={droppedItems} />
+      <DropZone
+        onDrop={handleDrop}
+        droppedItems={droppedItems}
+        updateItemStyle={updateItemStyle}
+      />
       <div style={{ marginTop: '20px' }}>
         <h3>Generated Code:</h3>
         <pre

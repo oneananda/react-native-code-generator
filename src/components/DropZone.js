@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDrop } from 'react-dnd';
 
-const DropZone = ({ onDrop, droppedItems }) => {
+const DropZone = ({ onDrop, droppedItems, updateItemStyle }) => {
   const [{ isOver }, dropRef] = useDrop(() => ({
     accept: 'ELEMENT',
     drop: (item, monitor) => {
@@ -12,6 +12,10 @@ const DropZone = ({ onDrop, droppedItems }) => {
       isOver: monitor.isOver(),
     }),
   }));
+
+  const handleStyleChange = (index, key, value) => {
+    updateItemStyle(index, key, value);
+  };
 
   return (
     <div
@@ -37,9 +41,34 @@ const DropZone = ({ onDrop, droppedItems }) => {
             border: '1px solid #ddd',
             backgroundColor: '#fff',
             cursor: 'pointer',
+            ...item.style,
           }}
         >
           {item.name}
+          <div style={{ marginTop: '5px' }}>
+            <label>
+              Font Size:
+              <input
+                type="number"
+                value={item.style.fontSize || 14}
+                onChange={(e) =>
+                  handleStyleChange(index, 'fontSize', `${e.target.value}px`)
+                }
+                style={{ width: '60px', marginLeft: '5px' }}
+              />
+            </label>
+            <label style={{ marginLeft: '10px' }}>
+              Color:
+              <input
+                type="color"
+                value={item.style.color || '#000000'}
+                onChange={(e) =>
+                  handleStyleChange(index, 'color', e.target.value)
+                }
+                style={{ marginLeft: '5px' }}
+              />
+            </label>
+          </div>
         </div>
       ))}
       {!droppedItems.length && (
