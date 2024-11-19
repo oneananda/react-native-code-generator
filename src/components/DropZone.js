@@ -2,24 +2,25 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 import { useDrag } from 'react-dnd';
 
-// Component for each dropped item
-const DroppedItem = ({ item, updateItemPosition }) => {
+const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
   const [, dragRef] = useDrag(() => ({
     type: 'ELEMENT',
-    item: { id: item.id }, // Pass the unique ID
+    item: { id: item.id },
   }));
 
   return (
     <div
       ref={dragRef}
+      onClick={() => onSelectItem(item.id)} // Select the item on click
       style={{
         position: 'absolute',
         top: item.top,
         left: item.left,
         padding: '8px',
         border: '1px solid #ddd',
-        backgroundColor: '#fff',
-        cursor: 'move',
+        backgroundColor: item.style.backgroundColor,
+        color: item.style.color,
+        cursor: 'pointer',
         ...item.style,
       }}
     >
@@ -28,8 +29,7 @@ const DroppedItem = ({ item, updateItemPosition }) => {
   );
 };
 
-// Main DropZone
-const DropZone = ({ droppedItems, updateItemPosition, onDrop }) => {
+const DropZone = ({ droppedItems, updateItemPosition, onDrop, onSelectItem }) => {
   const [, dropRef] = useDrop(() => ({
     accept: 'ELEMENT',
     hover: (draggedItem, monitor) => {
@@ -43,7 +43,6 @@ const DropZone = ({ droppedItems, updateItemPosition, onDrop }) => {
       const newLeft = offset.x - canvasRect.left;
       const newTop = offset.y - canvasRect.top;
 
-      // Update position using the unique ID
       updateItemPosition(draggedItem.id, newLeft, newTop);
     },
     drop: (item, monitor) => {
@@ -68,9 +67,10 @@ const DropZone = ({ droppedItems, updateItemPosition, onDrop }) => {
     >
       {droppedItems.map((item) => (
         <DroppedItem
-          key={item.id} // Use unique ID as key
+          key={item.id}
           item={item}
           updateItemPosition={updateItemPosition}
+          onSelectItem={onSelectItem}
         />
       ))}
       {!droppedItems.length && (
