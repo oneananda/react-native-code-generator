@@ -12,19 +12,17 @@ const App = () => {
       .getBoundingClientRect();
 
     setDroppedItems((prev) => {
-      // Check if the item is already present by matching its ID
       const isExisting = prev.some((existingItem) => existingItem.id === item.id);
 
       if (isExisting) {
-        return prev; // Do not add duplicates
+        return prev;
       }
 
-      // Add new item with a unique ID
       return [
         ...prev,
         {
           ...item,
-          id: item.id || uuidv4(), // Generate a unique ID if it doesn't exist
+          id: item.id || uuidv4(),
           top: offset.y - canvasRect.top,
           left: offset.x - canvasRect.left,
           style: {},
@@ -37,10 +35,36 @@ const App = () => {
     setDroppedItems((prev) =>
       prev.map((item) =>
         item.id === id
-          ? { ...item, left: Math.max(0, left), top: Math.max(0, top) } // Update position only for the matching ID
+          ? { ...item, left: Math.max(0, left), top: Math.max(0, top) }
           : item
       )
     );
+  };
+
+  const generateCode = () => {
+    const components = droppedItems.map((item) => {
+      if (item.name === 'Button') {
+        return `<Button title="Click Me" onPress={() => alert('Button Clicked!')} style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }} />`;
+      } else if (item.name === 'Text Box') {
+        return `<Text style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }}>Sample Text</Text>`;
+      }
+      return null;
+    });
+
+    return `
+import React from 'react';
+import { View, Button, Text } from 'react-native';
+
+const GeneratedApp = () => {
+  return (
+    <View style={{ flex: 1, position: 'relative' }}>
+      ${components.join('\n')}
+    </View>
+  );
+};
+
+export default GeneratedApp;
+    `;
   };
 
   return (
@@ -55,6 +79,19 @@ const App = () => {
         onDrop={handleDrop}
         updateItemPosition={updateItemPosition}
       />
+      <div style={{ marginTop: '20px' }}>
+        <h3>Generated Code:</h3>
+        <pre
+          style={{
+            background: '#f5f5f5',
+            padding: '10px',
+            border: '1px solid #ddd',
+            overflowX: 'auto',
+          }}
+        >
+          {generateCode()}
+        </pre>
+      </div>
     </div>
   );
 };
