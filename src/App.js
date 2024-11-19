@@ -23,13 +23,17 @@ const App = () => {
         ...prev,
         {
           ...item,
-          id: item.id || uuidv4(),
+          id: item.id || getId(),
           top: offset.y - canvasRect.top,
           left: offset.x - canvasRect.left,
           style: { color: '#000000', backgroundColor: '#ffffff' }, // Default styles
         },
       ];
     });
+  };
+
+  const getId = () => {
+    return 'unikid' + uuidv4().replace(/-/g, '').slice(0, 10);
   };
 
   const updateItemPosition = (id, left, top) => {
