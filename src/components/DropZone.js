@@ -8,6 +8,17 @@ const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
     item: { id: item.id },
   }));
 
+  const renderContent = () => {
+    switch (item.name) {
+      case 'Button':
+        return <button style={{ padding: '8px', cursor: 'pointer', border: 'none' }}>Button</button>;
+      case 'Text Box':
+        return <input type="text" style={{ width: '100%', padding: '8px', border: 'none' }} placeholder="Enter text here" />;
+      default:
+        return <div style={{ border: 'none' }}>{item.name}</div>;
+    }
+  };
+  
   return (
     <div
       ref={dragRef}
@@ -18,13 +29,13 @@ const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
         left: item.left,
         padding: '8px',
         border: '1px solid #ddd',
-        backgroundColor: item.style.backgroundColor,
-        color: item.style.color,
+        backgroundColor: item.style?.backgroundColor || 'white',
+        color: item.style?.color || 'black',
         cursor: 'pointer',
         ...item.style,
       }}
     >
-      {item.name} (ID: {item.id})
+      {renderContent()}
     </div>
   );
 };
