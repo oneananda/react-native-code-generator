@@ -52,61 +52,96 @@ const App = () => {
     );
   };
 
-  const deleteItem = (id) => {
-    setDroppedItems((prev) => prev.filter((item) => item.id !== id));
-    setSelectedItemId(null); // Clear selection after deletion
-  };
-  
-
   const selectedItem = droppedItems.find((item) => item.id === selectedItemId);
 
+  const generateCode = () => {
+    const components = droppedItems.map((item) => {
+      if (item.name === 'Button') {
+        return `<Button title="Click Me" onPress={() => alert('Button Clicked!')} style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }} />`;
+      } else if (item.name === 'Text Box') {
+        return `<Text style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }}>Sample Text</Text>`;
+      }
+      return null;
+    });
+
+    return `
+import React from 'react';
+import { View, Button, Text } from 'react-native';
+
+const GeneratedApp = () => {
   return (
-    <div style={{ display: 'flex', padding: '20px' }}>
-      <div style={{ flex: 3 }}>
-        <h1>React Native Code Generator</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <DraggableElement name="Button" />
-          <DraggableElement name="Text Box" />
-        </div>
-        <DropZone
-          droppedItems={droppedItems}
-          onDrop={handleDrop}
-          updateItemPosition={updateItemPosition}
-          onSelectItem={setSelectedItemId} // Pass selection handler
-        />
-      </div>
-      <div style={{ flex: 1, marginLeft: '20px', padding: '10px', border: '1px solid #ddd' }}>
-        <h3>Properties</h3>
-        {selectedItem ? (
-          <div>
-            <p><strong>ID:</strong> {selectedItem.id}</p>
-            <p><strong>Type:</strong> {selectedItem.name}</p>
-            <div>
-              <label>
-                Text Color:
-                <input
-                  type="color"
-                  value={selectedItem.style.color}
-                  onChange={(e) => updateItemStyle(selectedItem.id, 'color', e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                Background Color:
-                <input
-                  type="color"
-                  value={selectedItem.style.backgroundColor}
-                  onChange={(e) =>
-                    updateItemStyle(selectedItem.id, 'backgroundColor', e.target.value)
-                  }
-                />
-              </label>
-            </div>
+    <View style={{ flex: 1, position: 'relative' }}>
+      ${components.join('\n')}
+    </View>
+  );
+};
+
+export default GeneratedApp;
+    `;
+  };
+
+  return (
+    <div style={{ display: 'flex', padding: '20px', flexDirection: 'column' }}>
+      <div style={{ display: 'flex' }}>
+        <div style={{ flex: 3 }}>
+          <h1>React Native Code Generator</h1>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <DraggableElement name="Button" />
+            <DraggableElement name="Text Box" />
           </div>
-        ) : (
-          <p>Select an item to see its properties.</p>
-        )}
+          <DropZone
+            droppedItems={droppedItems}
+            onDrop={handleDrop}
+            updateItemPosition={updateItemPosition}
+            onSelectItem={setSelectedItemId} // Pass selection handler
+          />
+        </div>
+        <div style={{ flex: 1, marginLeft: '20px', padding: '10px', border: '1px solid #ddd' }}>
+          <h3>Properties</h3>
+          {selectedItem ? (
+            <div>
+              <p><strong>ID:</strong> {selectedItem.id}</p>
+              <p><strong>Type:</strong> {selectedItem.name}</p>
+              <div>
+                <label>
+                  Color:
+                  <input
+                    type="color"
+                    value={selectedItem.style.color}
+                    onChange={(e) => updateItemStyle(selectedItem.id, 'color', e.target.value)}
+                  />
+                </label>
+              </div>
+              <div>
+                <label>
+                  Background Color:
+                  <input
+                    type="color"
+                    value={selectedItem.style.backgroundColor}
+                    onChange={(e) =>
+                      updateItemStyle(selectedItem.id, 'backgroundColor', e.target.value)
+                    }
+                  />
+                </label>
+              </div>
+            </div>
+          ) : (
+            <p>Select an item to see its properties.</p>
+          )}
+        </div>
+      </div>
+      <div style={{ marginTop: '20px' }}>
+        <h3>Generated Code:</h3>
+        <pre
+          style={{
+            background: '#f5f5f5',
+            padding: '10px',
+            border: '1px solid #ddd',
+            overflowX: 'auto',
+          }}
+        >
+          {generateCode()}
+        </pre>
       </div>
     </div>
   );

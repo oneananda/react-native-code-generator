@@ -3,7 +3,7 @@ import { useDrag } from 'react-dnd';
 
 const DraggableElement = ({ name }) => {
   const [, dragRef] = useDrag(() => ({
-    type: 'ELEMENT', // Matches the type in DropZone
+    type: 'ELEMENT',
     item: { name },
   }));
 
