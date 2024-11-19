@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+﻿---
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Drag-and-Drop React Native Code Generator
 
-## Available Scripts
+This project allows users to create a React Native UI layout using a drag-and-drop interface. Users can drag elements (e.g., buttons, text boxes) onto a canvas, reposition them, modify their properties, and export the generated layout as React Native code or an image.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Drag-and-Drop**: Drag UI elements (e.g., Button, Text Box) into the canvas.
+- **Repositioning**: Move items freely within the canvas.
+- **Properties Panel**: Customize each item's color, size, and position.
+- **Export Features**:
+  - **React Native Code**: Generate the React Native JSX code for the layout.
+  - **Image Export**: Export the canvas as a `.png` image.
+- **Delete Items**: Remove items from the canvas.
+- **Keyboard Shortcuts**:
+  - `Arrow Keys`: Move the selected item.
+  - `Delete`: Remove the selected item.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technologies Used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React**: For building the UI.
+- **React DnD**: For drag-and-drop functionality.
+- **UUID**: For generating unique IDs for items.
+- **HTML-to-Image**: For exporting the canvas as an image.
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/oneananda/react-native-code-generator.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd react-native-code-generator
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Start the development server:
+   ```bash
+   npm start
+   ```
+2. Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### How to Use
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Drag elements (e.g., **Button**, **Text Box**) from the toolbar into the canvas.
+2. Click an item to select it. The **Properties Panel** on the right will display customization options.
+3. Adjust the item's **color**, **background color**, **width**, and **height** using the properties panel.
+4. Reposition items by dragging them within the canvas.
+5. Export your layout:
+   - **React Native Code**: Copy the generated code from the bottom panel.
+   - **Canvas Image**: Click the **Export Canvas** button to download the layout as a `.png` image.
 
-### `npm run eject`
+### Keyboard Shortcuts
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Key         | Action                      |
+|-------------|-----------------------------|
+| `Arrow Keys`| Move the selected item.     |
+| `Delete`    | Delete the selected item.   |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+src/
+├── components/
+│   ├── DraggableElement.js    # Draggable toolbar items (e.g., Button, Text Box)
+│   ├── DropZone.js            # Canvas where items are dropped and repositioned
+├── App.js                     # Main application logic
+├── index.js                   # React entry point
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Dependencies
 
-## Learn More
+- **react**: `^18.2.0`
+- **react-dnd**: `^16.0.1`
+- **react-dnd-html5-backend**: `^16.0.1`
+- **uuid**: `^9.0.0`
+- **html-to-image**: `^1.10.6`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Future Enhancements
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Undo/Redo**: Add functionality to revert or redo changes.
+- **Resizable Elements**: Enable users to resize elements directly on the canvas.
+- **Snap to Grid**: Enhance alignment by snapping items to a grid layout.
 
-### Code Splitting
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Contributions are welcome! Please fork the repository and submit a pull request for review.
 
-### Analyzing the Bundle Size
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This project is licensed under the [MIT License](LICENSE).
 
-### Making a Progressive Web App
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If you have any questions or feedback, feel free to reach out!
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
