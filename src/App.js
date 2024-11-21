@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DraggableElement from './components/DraggableElement';
 import DropZone from './components/DropZone';
 import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [droppedItems, setDroppedItems] = useState([]);
-  const [selectedItemId, setSelectedItemId] = useState(null); // Track the selected item
+  const [history, setHistory] = useState([]); // History stack for Undo
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const getId = () => 'unikid' + uuidv4().replace(/-/g, '').slice(0, 10);
+
+  // Save the current state to history
+  const saveToHistory = () => {
+    setHistory((prev) => [...prev, droppedItems]);
+  };
 
   const handleDrop = (item, offset) => {
+    saveToHistory(); // Save the current state before making changes
+
     const canvasRect = document
       .querySelector('div[style*="border: 2px dashed"]')
       .getBoundingClientRect();
@@ -26,17 +36,15 @@ const App = () => {
           id: item.id || getId(),
           top: offset.y - canvasRect.top,
           left: offset.x - canvasRect.left,
-          style: { color: '#000000', backgroundColor: '#ffffff' }, // Default styles
+          style: { color: '#000000', backgroundColor: '#ffffff' },
         },
       ];
     });
   };
 
-  const getId = () => {
-    return 'unikid' + uuidv4().replace(/-/g, '').slice(0, 10);
-  };
-
   const updateItemPosition = (id, left, top) => {
+    saveToHistory(); // Save state before updating position
+
     setDroppedItems((prev) =>
       prev.map((item) =>
         item.id === id
@@ -47,6 +55,8 @@ const App = () => {
   };
 
   const updateItemStyle = (id, key, value) => {
+    saveToHistory(); // Save state before updating styles
+
     setDroppedItems((prev) =>
       prev.map((item) =>
         item.id === id
@@ -56,33 +66,28 @@ const App = () => {
     );
   };
 
-  const selectedItem = droppedItems.find((item) => item.id === selectedItemId);
-
-  const generateCode = () => {
-    const components = droppedItems.map((item) => {
-      if (item.name === 'Button') {
-        return `<Button title="Click Me" onPress={() => alert('Button Clicked!')} style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }} />`;
-      } else if (item.name === 'Text Box') {
-        return `<Text style={{ position: 'absolute', top: ${item.top}, left: ${item.left} }}>Sample Text</Text>`;
-      }
-      return null;
-    });
-
-    return `
-import React from 'react';
-import { View, Button, Text } from 'react-native';
-
-const GeneratedApp = () => {
-  return (
-    <View style={{ flex: 1, position: 'relative' }}>
-      ${components.join('\n')}
-    </View>
-  );
-};
-
-export default GeneratedApp;
-    `;
+  const handleUndo = () => {
+    console.log("Ctrl+Z pressed!");
+    console.log(history.length);
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setHistory((prev) => prev.slice(0, -1)); // Remove the last state from history
+      setDroppedItems(previousState); // Revert to the previous state
+    }
   };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.ctrlKey && e.key === 'z') {
+        handleUndo(); // Call undo when Ctrl + Z is pressed
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress); // Cleanup
+  }, [history]);
+
+  const selectedItem = droppedItems.find((item) => item.id === selectedItemId);
 
   return (
     <div style={{ display: 'flex', padding: '20px', flexDirection: 'column' }}>
@@ -97,7 +102,7 @@ export default GeneratedApp;
             droppedItems={droppedItems}
             onDrop={handleDrop}
             updateItemPosition={updateItemPosition}
-            onSelectItem={setSelectedItemId} // Pass selection handler
+            onSelectItem={setSelectedItemId}
           />
         </div>
         <div style={{ flex: 1, marginLeft: '20px', padding: '10px', border: '1px solid #ddd' }}>
@@ -144,7 +149,7 @@ export default GeneratedApp;
             overflowX: 'auto',
           }}
         >
-          {generateCode()}
+          {/* Display generated code here */}
         </pre>
       </div>
     </div>
