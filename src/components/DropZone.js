@@ -11,28 +11,55 @@ const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
   const renderContent = () => {
     switch (item.name) {
       case 'Button':
-        return <button style={{ padding: '8px', cursor: 'pointer', border: 'none' }}>Button</button>;
+        return (
+          <button
+            style={{
+              padding: '8px',
+              cursor: 'pointer',
+              border: '1px solid #ccc', // Specific border for the button
+              backgroundColor: 'white',
+            }}
+          >
+            Button
+          </button>
+        );
       case 'Text Box':
-        return <input type="text" style={{ width: '100%', padding: '8px', border: 'none' }} placeholder="Enter text here" />;
+        return (
+          <input
+            type="text"
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc', // Specific border for the text box
+            }}
+            placeholder="Enter text here"
+          />
+        );
       default:
-        return <div style={{ border: 'none' }}>{item.name}</div>;
+        return (
+          <div
+            style={{
+              border: '1px solid #ccc', // Default border for custom elements
+              padding: '8px',
+              backgroundColor: 'white',
+            }}
+          >
+            {item.name}
+          </div>
+        );
     }
   };
-  
+
   return (
     <div
       ref={dragRef}
-      onClick={() => onSelectItem(item.id)} // Select the item on click
+      onClick={() => onSelectItem(item.id)} // Handle item selection
       style={{
         position: 'absolute',
         top: item.top,
         left: item.left,
-        padding: '8px',
-        border: '1px solid #ddd',
-        backgroundColor: item.style?.backgroundColor || 'white',
-        color: item.style?.color || 'black',
         cursor: 'pointer',
-        ...item.style,
+        ...item.style, // Custom styles from the item object
       }}
     >
       {renderContent()}
@@ -70,7 +97,7 @@ const DropZone = ({ droppedItems, updateItemPosition, onDrop, onSelectItem }) =>
       style={{
         width: '100%',
         height: '400px',
-        border: '2px dashed #ccc',
+        border: '2px dashed #ccc', // Canvas border
         marginTop: '20px',
         position: 'relative',
         backgroundColor: 'white',

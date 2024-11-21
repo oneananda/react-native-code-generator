@@ -10,9 +10,29 @@ const DraggableElement = ({ name }) => {
   const renderElement = () => {
     switch (name) {
       case 'Button':
-        return <button style={{ padding: '8px' }}>Button</button>;
+        return (
+          <button
+            style={{
+              padding: '8px',
+              border: '1px solid #ccc', // Add border here for the button
+              backgroundColor: 'white',
+            }}
+          >
+            Button
+          </button>
+        );
       case 'Text Box':
-        return <input type="text" style={{ padding: '8px', width: '100%' }} placeholder="Enter text here" />;
+        return (
+          <input
+            type="text"
+            style={{
+              padding: '8px',
+              width: '100%',
+              border: '1px solid #ccc', // Add border here for the input
+            }}
+            placeholder="Enter text here"
+          />
+        );
       default:
         return <div>{name}</div>;
     }
@@ -22,11 +42,10 @@ const DraggableElement = ({ name }) => {
     <div
       ref={dragRef}
       style={{
-        padding: '8px',
-        border: '1px solid #ccc',
         margin: '4px',
-        backgroundColor: 'white',
         cursor: 'move',
+        backgroundColor: 'white',
+        display: 'inline-block', // Prevent the parent div from expanding
       }}
     >
       {renderElement()}
