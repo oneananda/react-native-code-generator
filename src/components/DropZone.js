@@ -18,6 +18,7 @@ const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
               cursor: 'pointer',
               border: '1px solid #ccc', // Specific border for the button
               backgroundColor: 'white',
+              ...item.style,
             }}
           >
             Button
@@ -31,6 +32,7 @@ const DroppedItem = ({ item, updateItemPosition, onSelectItem }) => {
               width: '100%',
               padding: '8px',
               border: '1px solid #ccc', // Specific border for the text box
+              ...item.style,
             }}
             placeholder="Enter text here"
           />
