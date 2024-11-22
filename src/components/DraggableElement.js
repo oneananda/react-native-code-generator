@@ -2,55 +2,31 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 
 const DraggableElement = ({ name }) => {
-  const [, dragRef] = useDrag(() => ({
-    type: 'ELEMENT',
-    item: { name },
-  }));
+    const [, dragRef] = useDrag(() => ({
+        type: 'ELEMENT',
+        item: { name }, // No ID here
+    }));
 
-  const renderElement = () => {
-    switch (name) {
-      case 'Button':
-        return (
-          <button
-            style={{
-              padding: '8px',
-              border: '1px solid #ccc', // Add border here for the button
-              backgroundColor: 'white',
-            }}
-          >
-            Button
-          </button>
-        );
-      case 'Text Box':
-        return (
-          <input
-            type="text"
-            style={{
-              padding: '8px',
-              width: '100%',
-              border: '1px solid #ccc', // Add border here for the input
-            }}
-            placeholder="Enter text here"
-          />
-        );
-      default:
-        return <div>{name}</div>;
-    }
-  };
+    const renderElement = () => {
+        switch (name) {
+            case 'Button':
+                return <button style={{ padding: '8px', border: '1px solid #ccc' }}>Button</button>;
+            case 'Text Box':
+                return <input type="text" style={{ padding: '8px', border: '1px solid #ccc' }} />;
+            default:
+                return <div>{name}</div>;
+        }
+    };
 
-  return (
-    <div
-      ref={dragRef}
-      style={{
-        margin: '4px',
-        cursor: 'move',
-        backgroundColor: 'white',
-        display: 'inline-block', // Prevent the parent div from expanding
-      }}
-    >
-      {renderElement()}
-    </div>
-  );
+    return (
+        <div
+            ref={dragRef}
+            style={{ margin: '4px', cursor: 'move', backgroundColor: 'white', display: 'inline-block' }}
+        >
+            {renderElement()}
+        </div>
+    );
 };
 
 export default DraggableElement;
+
